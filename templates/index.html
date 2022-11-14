@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'assets/css/custom.css' %}">
+{% endblock styles %}
+
+
+{% block title %}
+ | EVENTS
+{% endblock title %}
+
+{% block header %}
+{% include 'header.html' %}
+{% endblock header %}
+
+{% block sidenav %}
+
+{% endblock sidenav %}
+
+
+
+{% block content %}
+<main class="page-content">
+    <div class="page-breadcrumb d-none d-sm-flex align-items-center">
+        <div class="breadcrumb-title pe-3 text-dark">Pages</div>
+        <div class="ps-3">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 p-0">
+              <li class="breadcrumb-item active"><a href="{% url 'homepage' %}" class="l"><i class="bx bx-home-alt text-dark"></i> Home</a>
+              </li>
+              
+            </ol>
+          </nav>
+        </div>
+      </div>
+ <div class="row mt-3">
+    <div class="card radius-10">
+        <div class="card-body mb-5">
+            <h5 class="card-title">Events</h5>
+            <hr>
+        </div>
+        <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
+            {% if datas %}
+            {% for d in datas %}
+            
+            <div class="col">
+                <div class="card_event bg-{% if d.selisih_tgl == 'selesai' %}white-blue {% elif d.selisih_tgl == 'sedang berlangsung' %}green-light {% else %}white-blue{% endif %}">
+                    <div class="imgBx bg-light">
+                        <img src="{{d.img_event.url}}" alt="">
+                    </div>
+                    <div class="content">
+                        <div class="details txt-green-light">
+                            <h2>{{d.nama_event}}</h2>
+                            <br>
+                            <h2>{{d.narasumber}}<br><span>Narasumber</span></h2>
+                            <div class="data">
+                                <h3><i class="lni lni-calendar"></i><br><span>{{d.tgl_acara|date:"d-m-Y"}}</h3>
+                                <h3><i class="lni lni-alarm-clock"></i><br><span>{{d.tgl_acara|date:"h:m"}} WIB</h3>
+                            </div>
+                            <div class="actionBtn">
+                                <a href="{% url 'detail-event' d.pk%}" class="btn btn btn-{% if d.selisih_tgl == 'selesai' %}danger disabled {% elif d.selisih_tgl == 'sedang berlangsung'%}success disabled{% else %}info{% endif %} ">Join</a>
+                                <a class="btn btn bg-light-info" href="{% url 'detail-event' d.pk%}">Detail</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+ </div>
+
+    
+    
+    
+    
+
+</main>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+var user = $(".dropdown-user-name").text()
+{% for msg in messages %}
+{% if msg.tags == 'error' %}
+swal({
+    title:"Penting!",
+    text:`{{msg}}`,
+    icon:'error'
+}).then(() => {
+    window.location = `/profile/${user}`
+})
+
+{% endif %}
+{% endfor %}
+</script>
+{% endblock scripts %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+| Certificate
+{% endblock title %}
+
+{% block style %}
+
+{% endblock style %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        {% if data %}
+    {% for d in data %}
+    <div class="card text-dark bg-light border">
+        <img src="{{d.event.img_event.url}}" alt="" class="card-img">
+        <div class="card-img-overlay">
+            <h3 class="text-center">{{d.event.nama_event}}</h3>
+            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+    <p class="card-text"><small>Last updated 3 mins ago</small></p>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    {% if messages %}
+{% for msg in messages %}
+{% if msg.tags == 'error' %}
+swal({
+    title:'Error',
+    text:`{{msg}}`,
+    icon:'error'
+})
+.then(() => {
+    window.location = `{% url 'homepage' %}`
+})
+{% endif %}
+{% endfor %}
+{% endif %}
+</script>
+{% endblock scripts %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+ | EVENTS DETAIL
+{% endblock title %}
+
+{% block header %}
+{% include 'header.html' %}
+{% endblock header %}
+
+{% block sidenav %}
+
+{% endblock sidenav %}
+
+{% block content %}
+<main class="page-content">
+    <div class="row">
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="mb-0">{{data.event.nama_event}}</h5>
+                    <hr>
+                    <div class="card shadow-none border">
+                        <div class="card-body">
+                           <table class="table table-borderless mb-0">
+                            <tbody>
+                                
+                                <tr>
+                                    <td>Narasumber</td>
+                                    <td>{{data.event.narasumber}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Deskripsi</td>
+                                    <td>{{data.event.deskripsi}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Lokasi</td>
+                                    <td>{{data.event.lokasi}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tgl Acara</td>
+                                    <td>{{data.event.tgl_acara|date:"d-m-Y"}}</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="{% url 'certificate' data.event.pk%}" class="btn btn-info">Download Sertifikat</a></td>
+                                    <td>
+                                        <button class="btn btn-success btn-sm float-end" type="button" disabled>Joined</button></td>    
+                                </tr>
+                            </tbody>
+                           </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</main>
+
+{% endblock content %}
+
+{% block scripts %}
+
+
+{% endblock scripts %}

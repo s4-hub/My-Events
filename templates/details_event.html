@@ -1,0 +1,39 @@
+
+<div class="col col-lg-9 mx-auto">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="about-left">
+                <h1 class="section-title">RUN DOWN</h1>
+                <div class="total-step">
+                    <div class="about-step">
+                        {% for d in obj %}
+                        {% if d.run_down_set.values %}
+                        {% for c in d.run_down_set.values %}
+                        <h2 class="sub-title">{{c.jadwal}}</h2>
+                        <div class="descp">
+                            <p>{{c.nama_acara}}</p>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <h2 class="sub-title">BELUM ADA RUNDOWN</h2>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="about-right">
+                <ul>
+                    {% for d in obj %}
+                    <li><i class="fadeIn animated bx bx-calendar-week"></i>{{d.tgl_acara|date:"l, d-m-Y"}}</li>
+                    <li><i class="fadeIn animated bx bx-map-pin"></i>{{d.lokasi}}</li>
+                    <li><i class="fadeIn animated bx bx-user"></i>{{d.jlh_peserta}} Peserta</li>
+                    <li><i class="fadeIn animated bx bx-certification"></i>Dapat Sertifikat</li>     
+                    {% endfor %}               
+                </ul>
+                <div class="float-end"> <a class="btn btn-info radius-30 px-4" href="{% url 'detail-event' obj.0.pk %}"><i class='bx bx-user'></i> Join!</a></div>
+            </div>
+        </div>
+    </div>
+</div>

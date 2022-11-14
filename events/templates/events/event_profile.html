@@ -1,0 +1,39 @@
+{% if datas %}
+<div class="d-flex align-items-center"> 
+     
+ </div>
+ <div class="table-responsive mt-3">
+   <table class="table align-middle mb-0">
+     <thead class="table-light text-center">
+      <tr>
+        <th>Nama Event</th>
+        <th>Narasumber</th>
+        <th>Lokasi</th>
+        <th>Status</th>
+        <th>Tgl. Event</th>
+      </tr>
+      </thead>
+      <tbody>
+       {% for data in datas %}
+       <tr class="text-center">
+           <td>{{data.event.nama_event}}</td>
+           <td>{{data.event.narasumber}}</td>
+           <td>{{data.event.lokasi}}</td>
+           {% if data.event.selisih_tgl == 'selesai' %}
+           <td><span class="badge bg-light-danger text-danger w-100">Selesai</span></td>
+           {% elif data.event.selisih_tgl == 'sedang_berlangsung' %}
+           <td><span class="badge bg-light-success text-success w-100">Sedang Berlangsung</span></td>
+           {% else %}
+           <td><span class="badge bg-light-info text-info w-100">Mendatang</span></td>
+           {% endif %}
+           <td>{{data.event.tgl_acara|date:"M d, Y h:m"}}</td>
+       </tr>
+       {% endfor %}
+
+      
+       </tbody>
+     </table>
+</div>
+ {% else %}
+ <h3 class="text-primary">Belum Pernah Mengikuti Event</h3>
+{% endif %}

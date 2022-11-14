@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+ | Profile
+{% endblock title %}
+
+{% block header %}
+{% include 'header.html' %}
+{% endblock header %}
+
+{% block sidenav %}
+
+{% endblock sidenav %}
+
+
+{% block content %}
+<div class="page-content">
+   <!--breadcrumb-->
+ <div class="page-breadcrumb d-none d-sm-flex align-items-center">
+  <div class="breadcrumb-title pe-3 text-dark">Pages</div>
+  <div class="ps-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0 p-0">
+        <li class="breadcrumb-item"><a href="{% url 'homepage' %}"><i class="bx bx-home-alt text-dark"></i></a>
+        </li>
+        <li class="breadcrumb-item active text-secondary" aria-current="page">User Profile</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+<!--end breadcrumb-->
+
+<div class="bg-dark"></div>
+<div class="row mt-3">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+          <h5 class="mb-0">My Account</h5>
+          <hr>
+          <div class="card shadow-none border">
+            <div class="card-header">
+              <h6 class="mb-0">USER INFORMATION</h6>
+            </div>
+            
+              {% include 'profiles/forms.html' %}
+            
+          </div>
+          <div class="card shadow-none border">
+            <div class="card-header">
+              <h6 class="mb-0">Followed Events</h6>
+            </div>
+            <div class="card-body" hx-get="{% url 'profile-event' %}" hx-trigger='load'>
+              Tidak Ada Kegiatan
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-4">
+    <div class="card shadow-sm border-0 overflow-hidden">
+      <div class="card-body">
+          <div class="profile-avatar text-center">
+            <img src="{% static 'assets/images/avatars/avatar-1.png' %}" class="rounded-circle shadow" width="120" height="120" alt="">
+          </div>
+          
+          <div class="text-center mt-4">
+            <h4 class="mb-1">{{data.nama}}</h4>
+            <div class="mt-4"></div>
+            <h6 class="mb-1">{{data.posisi}}</h6>
+            <p class="mb-0 text-secondary">{{data.nama_perusahaan}}</p>
+          </div>
+          <hr>
+          
+      </div>
+      
+    </div>
+  </div>
+</div><!--end row-->
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  var perusahaan = $("#perusahaan").text()
+  if (perusahaan === ''){
+    $("#perusahaan").prop('disabled',false)
+  }
+</script>
+<script>
+  document.body.addEventListener('htmx:configRequest', (event) => {
+    event.detail.headers['X-CSRFToken'] = '{{csrf_token}}';
+  })
+</script>
+
+<script>
+  
+</script>
+{% endblock scripts %}

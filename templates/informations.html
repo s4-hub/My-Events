@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+ | EVENTS
+{% endblock title %}
+
+
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-info">
+    <div class="container-fluid">	<a class="navbar-brand" href="#">BPJSTK EVENTS</a>
+            
+            <form class="d-flex">
+                <a class="btn btn-dark me-3 radius-30 px-4" href="{% url 'login' %}"><i class='bx bx-lock'></i> Login</a>
+                <a class="btn btn-light radius-30 px-4" href="{% url 'registrasi' %}"><i class='bx bx-user'></i> Register</a>
+            </form>
+    </div>
+</nav>
+{% endblock header %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <div class="row">
+        {% if obj %}
+        
+        <div class="col col-lg-9 mx-auto">
+            <div class="card shadow-sm radius-10 border-0 mb-3">
+                <div class="card-body">
+                    <div class="carousel slide" data-bs-ride="carousel" id="carouselExampleCaptions">
+                        <ol class="carousel-indicators">
+                            {% for o in obj|slice:":5" %}
+                            <li data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{forloop.counter0}}" {% if forloop.counter0 == 0 %}class="active"{% endif %} id="{{o.pk}}"></li>
+                            {% endfor %}
+                            
+                        </ol>
+                        <div class="carousel-inner">
+                            {% for o in obj|slice:":5" %}
+                            
+                            <div class="carousel-item {% if forloop.counter0 == 0 %}active{% endif %}" id="{{o}}">
+                              <img src="{{o.img_event.url}}" class="d-block w-100" style="filter: blur(1px) brightness(0.5);overlay:hidden;">
+                              <div class="carousel-caption d-none d-md-block">
+                                <h5>{{o.nama_event}}</h5>
+                                <p>
+                                    {{o.deskripsi}}
+                                </p>
+                              </div>
+                            </div>
+                            
+                            {% endfor %}
+                            
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-bs-slide="prev">	<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-bs-slide="next">	<span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-5 ">
+        </div>
+        {% endif %}
+    </div>
+    <div id="events_details">
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        var id = $("#carouselExampleCaptions .carousel-indicators li.active").attr('id')
+        $.get(`details/${id}`, function(data, status) {
+            $("#events_details").html(data)
+            
+        })
+    })
+    $("#carouselExampleCaptions").on('slid.bs.carousel', function(e) {
+        var ele = $("#carouselExampleCaptions .carousel-indicators li.active").attr('id')
+        $.get(`details/${ele}`, function(data, status) {
+            $("#events_details").html(data)
+            
+        })
+    })
+</script>
+{% endblock scripts %}

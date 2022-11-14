@@ -1,0 +1,32 @@
+<form class="row g-3" method="POST" action="{% url 'update_profile' data.user.username%}">
+    {% csrf_token %}
+    <div class="col-6">
+        <label class="form-label">Username</label>
+        <input type="text" class="form-control" value={{data.user.username}} disabled>
+     </div>
+    <div class="col-6">
+        <label class="form-label">Perusahaan</label>
+        {{form.nama_perusahaan}}
+    </div>
+    <div class="col-6">
+        <label class="form-label">Nama</label>
+        {{form.nama}}
+    </div>
+    <div class="col-6">
+        <label class="form-label">Email</label>
+        <input type="text" class="form-control" value="{{data.user.email}}" disabled>
+    </div>
+    <div class="col-6">
+      <label class="form-label">No. Telepon</label>
+      {{form.no_hp}}
+    </div>
+    <div class="col-6">
+      <label class="form-label">Jabatan</label>
+      {{form.posisi}}
+    </div>
+    <div class="text-start">
+        <button type="submit" class="btn btn-primary px-4 mt-2">Submit</button>
+        <a class="btn btn-warning px-4 mt-2" href="{% url 'profile' data.user.username %}">Cancel</a>
+        
+    </div>
+</form>

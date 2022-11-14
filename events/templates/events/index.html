@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %} |Daftar Event{% endblock title %}
+
+{% block content %}
+{% for data in datas %}
+<ol>
+    <li>{{data.nama_event}}</li>
+</ol>
+{% endfor %}
+{% endblock content %}

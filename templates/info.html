@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+ | EVENTS
+{% endblock title %}
+
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-info">
+    <div class="container-fluid">	<a class="navbar-brand" href="#">BPJSTK EVENTS</a>
+            
+            <form class="d-flex">
+                <a class="btn btn-dark me-3 radius-30 px-4" href="{% url 'login' %}"><i class='bx bx-lock'></i> Login</a>
+                <a class="btn btn-light radius-30 px-4" href="{% url 'registrasi' %}"><i class='bx bx-user'></i> Register</a>
+            </form>
+    </div>
+</nav>
+{% endblock header %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <div class="col col-lg-12 mx-auto">
+        <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                {% for o in obj|slice:":5" %}
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{forloop.counter0}}" {% if forloop.counter0 == 0 %}class="active"{% endif %}></button>
+                {% endfor %}
+            </div>
+            <div class="carousel-inner">
+                {% for o in obj|slice:":5" %}
+                <div class="carousel-item {% if forloop.counter0 == 0 %}active{% endif %}">
+                        <div class="card shadow-sm radius-10 border mb-3">
+                            <img src="{{o.img_event.url}}" class="card-img-top img-fluid" style="filter: blur(1px) brightness(0.5);overlay:hidden;max-width:auto;">
+                            <div class="card-img-overlay text-center text-white">
+                                <br><br><br><br><br><br>
+                                <h3>{{o.nama_event}}</h3>
+                                <p>{{o.deskripsi}}</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="about-left">
+                                            
+                                            <h1 class="section-title">RUN DOWN</h1>
+                                            <div class="total-step">
+                                                <div class="about-step">
+                                                    {% if o.run_down_set.values %}
+                                                    {% for d in o.run_down_set.values %}
+                                                    <h2 class="sub-title mt-2">{{d.jadwal}} WIB</h2>
+                                                    <div class="descps">
+                                                        <p>{{d.nama_acara}}</p>
+                                                    </div>
+                                                    {% endfor %}
+                                                    {% else %}
+                                                    <div class="descps">
+                                                        <p>Run down belum tersedia!</p>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>  
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="about-right">
+                                            <ul>
+                                                <li><i class="fadeIn animated bx bx-calendar-week"></i>{{o.tgl_acara|date:"l, d-m-Y"}}</li>
+                                                <li><i class="fadeIn animated bx bx-map-pin"></i>{{o.lokasi}}</li>
+                                                <li><i class="fadeIn animated bx bx-user"></i>{{o.jlh_peserta}} Peserta</li>
+                                                <li><i class="fadeIn animated bx bx-certification"></i>Dapat Sertifikat</li>
+                                            </ul>
+                                            <div class="float-end"> <a href="{% url 'detail-event' o.pk %}" class="btn btn-sm btn-primary">Register</a> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+              {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock content %}

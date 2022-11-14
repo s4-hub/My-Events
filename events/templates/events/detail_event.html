@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+ | EVENTS DETAIL
+{% endblock title %}
+
+{% block header %}
+{% include 'header.html' %}
+{% endblock header %}
+
+{% block sidenav %}
+
+{% endblock sidenav %}
+
+{% block content %}
+<main class="page-content">
+      <!--breadcrumb-->
+ <div class="page-breadcrumb d-none d-sm-flex align-items-center">
+    <div class="breadcrumb-title pe-3 text-dark">Pages</div>
+    <div class="ps-3">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 p-0">
+          <li class="breadcrumb-item"><a href="{% url 'homepage' %}"><i class="bx bx-home-alt text-dark"></i></a>
+          </li>
+          <li class="breadcrumb-item active text-gray" aria-current="page">Detail Event</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <!--end breadcrumb-->
+
+    <div class="row mt-5">
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="mb-0">{{obj.nama_event}}</h5>
+                    <hr>
+                    <div class="card shadow-none border">
+                        <div class="card-body">
+                           <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr>
+                                    <td>Narasumber</td>
+                                    <td>{{obj.narasumber}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Deskripsi</td>
+                                    <td>{{obj.deskripsi}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Lokasi</td>
+                                    <td>{{obj.lokasi}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tgl Acara</td>
+                                    <td>{{obj.tgl_acara|date:"d-m-Y"}}</td>
+                                </tr>
+                                <tr>
+                                    {% if datas.0.status == True %}
+                                    <td><a  href="{% if obj.tgl_selesai == 'selesai' %}{% url 'certificate' obj.pk%}{% else %}#{% endif %}" class="btn btn-info" {% if obj.tgl_selesai != 'selesai' %}id="id_certificate"{% endif %}>Download Sertifikat</a></td>
+                                    {% else %}
+                                    <td><button class="btn btn-warning" disabled>Download Sertifikat</button></td>
+                                    {% endif %}
+                                    <td>
+                                        <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="text" name="user" id="user_id" value="{{request.user.pk}}" hidden>
+                                    <input type="text" name="event" id="event_id" value="{{obj.pk}}" hidden>
+                                        {% if obj.selisih_tgl == 'selesai' %}
+                                        
+                                        <button class="btn btn-danger btn-sm float-end" type="button" disabled>Selesai</button></td>
+                                        {% else %}
+                                        {% for d in datas %}
+                                        
+                                        {% if d.status == True %}
+                                        <button class="btn btn-success btn-sm float-end" type="button" disabled>Joined</button></td>
+                                        {% else %}
+                                        <button class="btn btn-primary btn-sm float-end" type="button" id="join">Join</button></td>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% endif %}
+                                        
+                                    </form>
+                                </tr>
+                            </tbody>
+                           </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</main>
+
+{% endblock content %}
+
+{% block scripts %}
+
+<script>
+    var pk = $("#event_id").val()
+    {% for msg in messages %}
+    {% if msg.tags == 'error' %}
+    Swal.fire({
+        title:'<strong>ERROR!</strong>',
+        text:`{{msg}}`,
+        icon:'error'
+    })
+    .then(() => {
+        $("#join").attr("disabled", true)
+    })
+    $("#id_certificate").click(() => {
+        Swal.fire({
+            title: '<strong>SELAMAT!</strong>',
+            icon: 'success',
+            html:
+              'Silahkan Download Serti. ' +
+              '<br>Anda belum dapat mengunduh <u>Sertifikat</u>',
+            showCloseButton: true,
+            confirmButtonText:'Download'
+          }).then((result) => {
+            window.open(`/events/${pk}/certificate`)
+            $.get(`/events/${pk}/certificate`, function(data, status){
+                console.log(data)
+            })
+          })
+    })
+    {% else %}
+    $("#id_certificate").click(() => {
+        Swal.fire({
+            title: '<strong>PERINGANTAN!</strong>',
+            icon: 'warning',
+            html:
+              'Kegiatan ini masih sedang berlangsung!. ' +
+              '<br>Anda belum dapat mengunduh <u>Sertifikat</u>',
+            showCloseButton: true,
+          })
+    })
+    {% endif %}
+    {% endfor %}
+
+</script>
+
+<script>
+    function RegistrasiEvent() {
+        console.log($("#user_id").val())
+        var data = new FormData()
+        data.append("user_id", $("#user_id").val())
+        data.append("event_id", $("#event_id").val())
+        data.append("csrfmiddlewaretoken", $("input[name='csrfmiddlewaretoken']").val())
+
+        $.ajax({
+            method:"POST",
+            url:`{% url 'registrasi-event' %}`,
+            contentType:false,
+            processData:false,
+            data:data,
+            success:function(res){
+                if(res['msg'] === 'success'){
+                    swal({
+                        title:'Success',
+                        text:'Anda berhasil bergabung di Event ini.',
+                        icon:"success"
+                      })
+                      .then(() => {
+                        $("#join").attr("disabled",true)
+                        $("#join").text("Joined")
+                       
+                      })
+                } else if(res['msg'] === 'exist'){
+                    swal({
+                        title:'Peringatan',
+                        text:'Anda sudah pernah melakukan registrasi event ini',
+                        icon:"warning"
+                    })
+                }
+                
+            },
+            error:function(err){
+                console.log(err)
+            }
+        })
+    }
+    $("#join").click(function(){
+        console.log('klik')
+        RegistrasiEvent();
+    })
+
+</script>
+
+<script>
+    
+</script>
+
+{% endblock scripts %}

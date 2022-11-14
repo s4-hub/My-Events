@@ -1,0 +1,33 @@
+<div class="card-body" id="profile">
+    <form class="row g-3" hx-target="this" hx-swap="outerHTML">
+        {% csrf_token %}
+         <div class="col-6">
+            <label class="form-label">Username</label>
+            <input type="text" class="form-control" value={{data.user.username}} disabled>
+         </div>
+         <div class="col-6">
+            <label class="form-label">Perusahaan</label>
+            <input type="text" class="form-control" value="{{data.nama_perusahaan}}" disabled>
+          </div>
+          <div class="col-6">
+            <label class="form-label">Nama</label>
+            <input type="text" class="form-control" value="{{data.nama}}" disabled>
+          </div>
+        <div class="col-6">
+            <label class="form-label">Email</label>
+            <input type="text" class="form-control" value="{{data.user.email}}" disabled>
+        </div>
+        <div class="col-6">
+          <label class="form-label">No. Telepon</label>
+          <input type="text" class="form-control" value="{{data.no_hp}}" disabled>
+        </div>
+        <div class="col-6">
+          <label class="form-label">Jabatan</label>
+          <input type="text" class="form-control" value="{{data.posisi}}" disabled>
+        </div>
+    
+        <div class="text-start">
+          <button  hx-get="{% url 'update_profile' data.user.username %}" class="btn btn-primary px-4 mt-2">Update</button>
+        </div>
+    </form>
+</div>
