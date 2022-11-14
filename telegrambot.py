@@ -11,8 +11,9 @@ from telegram.ext import *
 
 from profiles.models import userProfile
 
-API_KEY = '5644982761:AAEVn3itxbBw2a3N9kjjDr29mxkpW34RaU4'
+from decouple import config
 
+API_KEY = config('API_KEY')
 
 
 print('Bot Started')
