@@ -7,8 +7,8 @@
                 <div class="total-step">
                     <div class="about-step">
                         {% for d in obj %}
-                        {% if d.run_down_set.values %}
-                        {% for c in d.run_down_set.values %}
+                        {% if d.event_rundown.all %}
+                        {% for c in d.event_rundown.all %}
                         <h2 class="sub-title">{{c.jadwal}}</h2>
                         <div class="descp">
                             <p>{{c.nama_acara}}</p>

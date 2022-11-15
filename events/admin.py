@@ -26,4 +26,4 @@ admin.site.register(myEvents, EventAdmin)
 
 @admin.register(pickedupEvent)
 class AdminPickedupEvent(admin.ModelAdmin):
-    list_display = ('participant', 'event','status')
+    list_display = ('participant', 'event','status','serial_num')

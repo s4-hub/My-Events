@@ -94,7 +94,7 @@ def register_event(request):
 def detail_event_uid(request, uuid):
     try:
         data = pickedupEvent.objects.select_related('participant','event').get(uid=uuid)
-        print(data)
+        
         # if datas.DoesNotExist:
         #     messages.error(request, 'Alamat anda salah!')
         context = {

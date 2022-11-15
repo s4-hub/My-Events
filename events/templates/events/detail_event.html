@@ -157,10 +157,13 @@
             data:data,
             success:function(res){
                 if(res['msg'] === 'success'){
-                    swal({
-                        title:'Success',
-                        text:'Anda berhasil bergabung di Event ini.',
-                        icon:"success"
+                    Swal.fire({
+                        title: '<strong>SELAMAT!</strong>',
+                        icon: 'success',
+                        html:
+                          'Anda berhasil bergabung',
+                        showCloseButton: true,
+                        
                       })
                       .then(() => {
                         $("#join").attr("disabled",true)
@@ -168,8 +171,8 @@
                        
                       })
                 } else if(res['msg'] === 'exist'){
-                    swal({
-                        title:'Peringatan',
+                    Swal.fire({
+                        title:'<strong>Peringantan!</strong>',
                         text:'Anda sudah pernah melakukan registrasi event ini',
                         icon:"warning"
                     })

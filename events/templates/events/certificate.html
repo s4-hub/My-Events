@@ -10,16 +10,40 @@
 {% endblock style %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container-fluid mt-5">
     <div class="row">
         {% if data %}
     {% for d in data %}
-    <div class="card text-dark bg-light border">
-        <img src="{{d.event.img_event.url}}" alt="" class="card-img">
+    <div class="card text-white bg-light border">
+        <div class="card-body">
+            <img src="{{d.event.sertifikat.url}}" alt="" class="card-img">
         <div class="card-img-overlay">
-            <h3 class="text-center">{{d.event.nama_event}}</h3>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-    <p class="card-text"><small>Last updated 3 mins ago</small></p>
+            <div class="col d-flex justify-content-center">
+                <div class="row text-secondary" style="margin-top:40vh;font-size:50px;">
+                    {{d.participant.nama}}
+                </div>
+            </div>
+            <div class="col d-flex justify-content-center">
+                <div class="row text-success" style="margin-top:10vh;font-size:50px;">
+                    {{d.event.nama_event}}
+                </div>
+            </div>
+            <div class="col d-flex justify-content-center">
+                <div class="row text-dark" style="margin-top:22vh;font-size:1.15rem;text-transform:uppercase;">
+                    Medan, {{d.event.tgl_acara|date:'d F Y'}}
+                </div>
+            </div>
+            <div class="col d-flex justify-content-center">
+                <div class="row text-dark" style="margin-top:14vh;font-size:1rem;text-transform:uppercase;">
+                    {{d.event.narasumber}}
+                </div>
+            </div>
+            <div class="col d-flex justify-content-center">
+                <div class="row text-dark" style="font-size:0.75rem;text-transform:uppercase;">
+                    Deputi Direktur Wilayah
+                </div>
+            </div>
+        </div>
         </div>
     </div>
     {% endfor %}

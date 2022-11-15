@@ -11,14 +11,15 @@ from events.models import myEvents,pickedupEvent,run_down
 def information_front(request):
     if(request.user.is_authenticated):
         return redirect('homepage')
-    # obj = myEvents.objects.all().annotate(jlh_peserta=Count('pickedupevent__participant')).annotate(events=Subquery(run_down.objects.filter(event=OuterRef('pk')).values_list('jadwal','nama_acara').values('events')))
-    obj = myEvents.objects.all().annotate(jlh_peserta=Count('pickedupevent__participant')).annotate(events=Subquery(run_down.objects.filter(event=OuterRef('pk')).values_list('jadwal','nama_acara').values('nama_acara').values('jadwal')))
+    obj = myEvents.objects.all().annotate(jlh_peserta=Count('pickedupevent__participant'))
+    # obj = myEvents.objects.all().annotate(jlh_peserta=Count('pickedupevent__participant')).annotate(events=Subquery(run_down.objects.filter(event=OuterRef('pk')).values_list('jadwal','nama_acara').values('nama_acara').values('jadwal')))
+    # print(obj)
     return render(request, 'informations.html', {'obj':obj})
 
 def details_event(request,pk):
     datas = run_down.objects.filter(event=pk)
-    obj = myEvents.objects.filter(pk=pk).annotate(jlh_peserta=Count('pickedupevent__participant')).annotate(events=Subquery(run_down.objects.filter(event=OuterRef('pk')).values_list('jadwal','nama_acara').values('nama_acara').values('jadwal')))
-    print(obj)
+    obj = myEvents.objects.filter(pk=pk).annotate(jlh_peserta=Count('pickedupevent__participant'))
+    print(dir(obj))
     # print(datas)
     return render(request, 'details_event.html',{'obj':obj})
 

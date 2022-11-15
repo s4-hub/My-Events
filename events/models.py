@@ -1,7 +1,6 @@
 from enum import unique
 import os
-from pickletools import uint4
-from uuid import uuid4
+from uuid import uuid4,uuid3
 from django.db import models
 from PIL import Image
 from profiles.models import userProfile
@@ -18,6 +17,15 @@ def path_and_rename(instance, filename):
         filename = '{}.{}'.format(uuid4().hex, ext)
     return os.path.join(upload_to, filename)
 
+def path_sertifikat(instance, filename):
+    upload_to = 'events/sertifikat'
+    ext = filename.split('.')[-1]
+    if instance.pk:
+        filename = '{}.{}'.format(instance.pk, ext)
+    else:
+        filename = '{}.{}'.format(uuid4().hex, ext)
+    return os.path.join(upload_to, filename)
+
 class myEvents(models.Model):
     nama_event = models.CharField(max_length=200)
     narasumber = models.CharField(max_length=200)
@@ -26,6 +34,7 @@ class myEvents(models.Model):
     tgl_acara = models.DateTimeField()
     tgl_selesai = models.DateTimeField()
     img_event = models.ImageField(upload_to=path_and_rename, blank=True, null=True)
+    sertifikat = models.ImageField(upload_to=path_sertifikat, blank=True, null=True)
 
     def __str__(self):
         return f'{self.nama_event}'
@@ -55,10 +64,17 @@ class pickedupEvent(models.Model):
     event = models.ForeignKey(myEvents, on_delete=models.CASCADE)
     uid = models.UUIDField(default=uuid4().hex)
     status = models.BooleanField(default=False)
-    join_date = models.DateField(auto_now_add=True)
+    join_date = models.DateTimeField(auto_now_add=True)
     
+    def serial_num(self):
+        dt = self.join_date.strftime('%d%m%Y%H%M%S%f')
+        sn = hex(int(dt))
+        return sn[2:]
+
     def __str__(self):
         return f'{self.participant.nama} - {self.event.nama_event}'
+
+    
 
     # def save(self):
     #     super(pickedupEvent, self).save()
@@ -66,7 +82,7 @@ class pickedupEvent(models.Model):
     #     uid.save(self.uid)
 
 class run_down(models.Model):
-    event = models.ForeignKey(myEvents, on_delete=models.CASCADE)
+    event = models.ForeignKey(myEvents, on_delete=models.CASCADE, related_name='event_rundown')
     nama_acara = models.CharField(max_length=300, blank=True, null=True)
     jadwal = models.TimeField(blank=True, null=True)
     

@@ -86,11 +86,15 @@
 var user = $(".dropdown-user-name").text()
 {% for msg in messages %}
 {% if msg.tags == 'error' %}
-swal({
-    title:"Penting!",
-    text:`{{msg}}`,
-    icon:'error'
-}).then(() => {
+Swal.fire({
+    title: '<strong>ERROR!</strong>',
+    icon: 'error',
+    html:
+      'Data Anda Belum Terupdate'+
+      '<br>Silahkan klik tombol di bawah!.',
+    showCloseButton: true,
+    confirmButtonText:'Update'
+  }).then(() => {
     window.location = `/profile/${user}`
 })
 
