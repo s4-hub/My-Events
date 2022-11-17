@@ -66,7 +66,7 @@
                                         <form method="POST">
                                     {% csrf_token %}
                                     <input type="text" name="user" id="user_id" value="{{request.user.pk}}" hidden>
-                                    <input type="text" name="event" id="event_id" value="{{obj.pk}}" hidden>
+                                    <input type="text" name="event" id="event_id" value="{{datas.0.uid}}" hidden>
                                         {% if obj.selisih_tgl == 'selesai' %}
                                         
                                         <button class="btn btn-danger btn-sm float-end" type="button" disabled>Selesai</button></td>
@@ -119,8 +119,8 @@
             showCloseButton: true,
             confirmButtonText:'Download'
           }).then((result) => {
-            window.open(`/events/${pk}/certificate`)
-            $.get(`/events/${pk}/certificate`, function(data, status){
+            window.open(`/events/certificate/${pk}`)
+            $.get(`/events/certificate/${pk}`, function(data, status){
                 console.log(data)
             })
           })

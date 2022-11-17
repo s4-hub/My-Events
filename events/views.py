@@ -1,15 +1,28 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Subquery, OuterRef, Q
+from django.views.generic import View
+from django.template.loader import render_to_string, get_template
+
 from .models import myEvents, pickedupEvent
 from profiles.models import userProfile
 
 from django.core.exceptions import ObjectDoesNotExist
 import qrcode
+import qrcode.image.svg
+
+from reportlab.graphics.shapes import Drawing
+from reportlab.graphics.barcode import qr
+from reportlab.lib.pagesizes import A4
+from reportlab.graphics import renderPDF
+from reportlab.pdfgen import canvas
+
+from .utils import render_to_pdf
+
 from io import BytesIO
 import requests
 
@@ -42,6 +55,7 @@ def active_events(request):
 @login_required
 def detail_event(request, pk):
     obj = get_object_or_404(myEvents, pk=pk)
+    
     # user_id = request.user.pk
     user_id = userProfile.objects.get(user__username=request.user)
     
@@ -131,6 +145,38 @@ def certificate(request,pk):
         'data':data
     }
     return render(request, 'events/certificate.html',context)
+
+class GenerateSertifikat(View):
+    def get(self, request, pk, *args, **kwargs):
+        data = pickedupEvent.objects.select_related('participant','event').filter(participant__user__username=request.user, uid=pk)
+        if not data.exists():
+            return redirect('detail-event', pk=data[0].event.pk)
+
+        for d in data:
+            sumber = [d.event.narasumber, "DEPUTI DIREKTUR KANWIL SUMBAGUT"]
+            
+        factory = qrcode.image.svg.SvgImage
+        img = qrcode.make(sumber, image_factory=factory, box_size=20)
+        stream = BytesIO()
+        img.save(stream)
+        svg = stream.getvalue().decode()
+        template = get_template('events/certicate.html')
+        context = {
+            'data':data,
+            'svg':svg
+        }
+        html = template.render(context)
+
+        pdf = render_to_pdf(html)
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Sertifikat %s - %s.pdf" % (data[0].event.nama_event, data[0].participant.nama)
+            content = "inline; filename='%s'" % (filename)
+            response['Content-Disposition'] = content
+            return response
+
+        return HttpResponse("NOT FOUND!")
+            
 
 def certificate_view(request):
     return render(request, 'events/certificate2.html')
