@@ -57,7 +57,7 @@
                                     <td>{{obj.tgl_acara|date:"d-m-Y"}}</td>
                                 </tr>
                                 <tr>
-                                    {% if datas.0.status == True %}
+                                    {% if datas.0.event.all.0.status == True %}
                                     <td><a  href="{% if obj.tgl_selesai == 'selesai' %}{% url 'certificate' obj.pk%}{% else %}#{% endif %}" class="btn btn-info" {% if obj.tgl_selesai != 'selesai' %}id="id_certificate"{% endif %}>Download Sertifikat</a></td>
                                     {% else %}
                                     <td><button class="btn btn-warning" disabled>Download Sertifikat</button></td>
@@ -66,7 +66,8 @@
                                         <form method="POST">
                                     {% csrf_token %}
                                     <input type="text" name="user" id="user_id" value="{{request.user.pk}}" hidden>
-                                    <input type="text" name="event" id="event_id" value="{{datas.0.uid}}" hidden>
+                                    <input type="text" name="event" id="event_id" value="{% for d in datas.0.event.all %}{% if d.event.pk == datas.0.pk %}{{d.uid}}{% endif %}{% endfor %}" hidden>
+                                    <div>{% for d in datas %}{{d.values.status}}{% endfor %}</div>
                                         {% if obj.selisih_tgl == 'selesai' %}
                                         
                                         <button class="btn btn-danger btn-sm float-end" type="button" disabled>Selesai</button></td>

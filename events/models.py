@@ -8,6 +8,15 @@ from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+
+def validate_file_extension(value):
+    from django.core.exceptions import ValidationError
+    ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
+    valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
+    if not ext.lower() in valid_extensions:
+        raise ValidationError('Unsupported file extension.')
+
+
 def path_and_rename(instance, filename):
     upload_to = 'events'
     ext = filename.split('.')[-1]
@@ -34,7 +43,7 @@ class myEvents(models.Model):
     tgl_acara = models.DateTimeField()
     tgl_selesai = models.DateTimeField()
     img_event = models.ImageField(upload_to=path_and_rename, blank=True, null=True)
-    sertifikat = models.ImageField(upload_to=path_sertifikat, blank=True, null=True)
+    sertifikat = models.FileField(upload_to=path_sertifikat, blank=True, null=True, validators=[validate_file_extension])
 
     def __str__(self):
         return f'{self.nama_event}'
@@ -60,8 +69,8 @@ class myEvents(models.Model):
         img_event.save(self.img_event.path)
 
 class pickedupEvent(models.Model):
-    participant = models.ForeignKey(userProfile, on_delete=models.CASCADE, related_name='participant')
-    event = models.ForeignKey(myEvents, on_delete=models.CASCADE)
+    participant = models.ForeignKey(userProfile, on_delete=models.CASCADE, related_name='peserta')
+    event = models.ForeignKey(myEvents, on_delete=models.CASCADE, related_name='event')
     uid = models.UUIDField(default=uuid4().hex)
     status = models.BooleanField(default=False)
     join_date = models.DateTimeField(auto_now_add=True)
